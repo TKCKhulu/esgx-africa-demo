@@ -3,6 +3,11 @@
 
 import streamlit as st
 import matplotlib.pyplot as plt
+from PIL import Image
+
+logo = Image.open("esgx-logo.png")
+st.image(logo, width=200)
+
 
 # --- App Header ---
 st.set_page_config(page_title="ESGx.Africa Demo", layout="centered")
