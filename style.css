@@ -1,0 +1,8 @@
+body {
+    background-color: #f3f5f7; /* light grey-blue */
+    color: #203040;            /* dark blue text */
+}
+
+h1, h2, h3 {
+    color: #1c7e57;            /* green (Ubuntu/Africa brand) */
+}
