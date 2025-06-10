@@ -2,13 +2,18 @@
 # This script creates a simple Streamlit app for funders to interact with your ESG scoring logic.
 
 import streamlit as st
-import matplotlib.pyplot as plt
+import streamlit as st
 from PIL import Image
 
+# Show logo
 logo = Image.open("esgx-logo.png")
 st.image(logo, width=200)
+
+# Apply custom styles
 with open("style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+import matplotlib.pyplot as plt
 
 
 
