@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: esgx_postgres
+    environment:
+      POSTGRES_DB: esgx_africa
+      POSTGRES_USER: esgx_user
+      POSTGRES_PASSWORD: esgx_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - esgx_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: esgx_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - esgx_network
+
+  # ESGx.Africa Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: esgx_api
+    environment:
+      - DATABASE_URL=postgresql://esgx_user:esgx_password@postgres:5432/esgx_africa
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=ubuntu-esg-secret-key-for-africa
+      - DEBUG=true
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - esgx_network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Streamlit Demo
+  demo:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: esgx_demo
+    ports:
+      - "8501:8501"
+    networks:
+      - esgx_network
+    command: streamlit run esgx_africa_demo.py --server.address 0.0.0.0 --server.port 8501
+
+volumes:
+  postgres_data:
+
+networks:
+  esgx_network:
+    driver: bridge
